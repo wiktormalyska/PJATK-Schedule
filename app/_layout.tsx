@@ -1,24 +1,41 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import {StatusBar} from 'react-native';
+import {Stack} from 'expo-router';
 import 'react-native-reanimated';
+import '../global.css';
+import React from "react";
+import {useAuth} from '@/hooks/use-auth';
+import {Header} from "@/components/Header";
+import {ThemeNames, useTheme} from "@/hooks/use-theme";
+import {useSlideMenu} from "@/components/SlidingMenu";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+    const {isAuthenticated} = useAuth();
+    const {getTheme} = useTheme();
+    const {openMenu, closeMenu, isOpen, render} = useSlideMenu();
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+    const currentTheme = getTheme();
+    const isLightTheme = currentTheme.name === ThemeNames.LIGHT;
+
+    return (
+        <>
+            <StatusBar
+                barStyle={isLightTheme ? "dark-content" : "light-content"}
+                backgroundColor={getTheme().style.background}
+            />
+            <Header openMenu={() => openMenu()} closeMenu={() => closeMenu()} isMenuOpen={isOpen}></Header>
+            {render({children: (
+                    <Stack>
+                        {isAuthenticated ? (
+                            <>
+                                <Stack.Screen name="home" options={{title: 'Home'}}/>
+                                <Stack.Screen name="about" options={{title: 'About'}}/>
+                            </>
+                        ) : (
+                            <Stack.Screen name="loginPage" options={{title: 'Login', headerShown: false}}/>
+                        )}
+                    </Stack>
+                )})}
+        </>
+    );
 }
