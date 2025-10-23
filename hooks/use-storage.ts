@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const useStorage: Function = (() => {
+const useStorage = () => {
     const saveData = async (key: string, value: any) => {
         try {
             await AsyncStorage.setItem(key, JSON.stringify(value));
-            console.log('Data '+key+' saved :'+value);
+            console.log('Data ' + key + ' saved: ' + value);
         } catch (error) {
             console.error('Error saving data:', error);
         }
@@ -13,7 +13,7 @@ const useStorage: Function = (() => {
     const loadData = async (key: string) => {
         try {
             const value = await AsyncStorage.getItem(key);
-            console.log('Data '+key+' loaded :'+value);
+            console.log('Data ' + key + ' loaded: ' + value);
             return value ? JSON.parse(value) : null;
         } catch (error) {
             console.error('Error loading data:', error);
@@ -24,7 +24,7 @@ const useStorage: Function = (() => {
     const removeData = async (key: string) => {
         try {
             await AsyncStorage.removeItem(key);
-            console.log('Data '+key+' removed');
+            console.log('Data ' + key + ' removed');
         } catch (error) {
             console.error('Error removing data:', error);
         }
@@ -35,6 +35,6 @@ const useStorage: Function = (() => {
         loadData,
         removeData
     };
-})
+};
 
 export default useStorage;

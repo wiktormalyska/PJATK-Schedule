@@ -3,19 +3,16 @@ import {Stack} from 'expo-router';
 import 'react-native-reanimated';
 import '../global.css';
 import React from "react";
-import {useAuth} from '@/hooks/use-auth';
 import {Header} from "@/components/Header";
-import {ThemeNames, useTheme} from "@/hooks/use-theme";
+import {useTheme} from "@/hooks/use-theme";
 import {useSlideMenu} from "@/components/SlidingMenu";
+import {LoadingScreenProvider} from "@/contexts/LoadingScreenContext";
+import {AuthContextProvider, useAuthContext} from "@/contexts/AuthContext";
 
-
-export default function RootLayout() {
-    const {isAuthenticated} = useAuth();
-    const {getTheme} = useTheme();
-    const {openMenu, closeMenu, isOpen, render} = useSlideMenu();
-
-    const currentTheme = getTheme();
-    const isLightTheme = currentTheme.name === ThemeNames.LIGHT;
+const AppContent = () => {
+    const {getTheme, isLightTheme} = useTheme();
+    const {openMenu, closeMenu, isOpen, render: renderSlideMenu} = useSlideMenu();
+    const {isAuthenticated} = useAuthContext();
 
     return (
         <>
@@ -24,18 +21,30 @@ export default function RootLayout() {
                 backgroundColor={getTheme().style.background}
             />
             <Header openMenu={() => openMenu()} closeMenu={() => closeMenu()} isMenuOpen={isOpen}></Header>
-            {render({children: (
+            {renderSlideMenu({
+                children: (
                     <Stack>
                         {isAuthenticated ? (
                             <>
-                                <Stack.Screen name="home" options={{title: 'Home'}}/>
-                                <Stack.Screen name="about" options={{title: 'About'}}/>
+                                <Stack.Screen name="home" options={{title: 'Home', headerShown: false}}/>
+                                <Stack.Screen name="about" options={{title: 'About', headerShown: false}}/>
                             </>
                         ) : (
                             <Stack.Screen name="loginPage" options={{title: 'Login', headerShown: false}}/>
                         )}
                     </Stack>
-                )})}
+                )
+            })}
         </>
+    );
+};
+
+export default function RootLayout() {
+    return (
+        <LoadingScreenProvider>
+            <AuthContextProvider>
+                <AppContent/>
+            </AuthContextProvider>
+        </LoadingScreenProvider>
     );
 }

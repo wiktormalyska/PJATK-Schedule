@@ -29,6 +29,8 @@ export const useTheme = () => {
     const {saveData, loadData} = useStorage()
     const [currentTheme, setCurrentTheme] = useState<Theme>(ThemeList[ThemeNames.LIGHT]);
 
+    const isLightTheme = currentTheme.name === ThemeNames.LIGHT;
+
     useEffect(() => {
         const loadTheme = async () => {
             const savedThemeName = await loadData(THEME_STORAGE_KEY);
@@ -37,9 +39,12 @@ export const useTheme = () => {
                 if (theme) {
                     setCurrentTheme(theme);
                 }
+            } else {
+                setCurrentTheme(ThemeList[ThemeNames.LIGHT]);
+                await saveData(THEME_STORAGE_KEY, ThemeNames.LIGHT);
             }
         };
-        loadTheme();
+        loadTheme().then();
     }, [loadData])
     
     const getTheme = ():Theme => {
@@ -59,5 +64,6 @@ export const useTheme = () => {
     return {
         getTheme,
         setTheme,
+        isLightTheme
     }
 }
