@@ -1,6 +1,7 @@
 import React from "react";
 import {View, Text, TouchableOpacity} from "react-native";
 import {useTheme} from "@/hooks/use-theme";
+import {useAuthContext} from "@/contexts/AuthContext";
 
 // import Logo from "@/assets/Logo.svg"; // Replace with your SVG import
 
@@ -12,6 +13,7 @@ interface HeaderProps {
 
 export const Header = ({openMenu, closeMenu, isMenuOpen}: HeaderProps) => {
     const {getTheme} = useTheme()
+    const {isAuthenticated} = useAuthContext()
 
     return (
         <View className="flex flex-row items-center justify-between p-4 pt-7"
@@ -20,7 +22,11 @@ export const Header = ({openMenu, closeMenu, isMenuOpen}: HeaderProps) => {
                   zIndex: 999
               }}
         >
-            <TouchableOpacity onPress={isMenuOpen ? closeMenu : openMenu}>
+            <TouchableOpacity onPress={isMenuOpen ? closeMenu : openMenu}
+                              style={
+                                  isAuthenticated? {} : {display: "none"}
+                              }
+            >
                 <View style={{width: 28, height: 28, justifyContent: "center", alignItems: "center"}}>
                     {isMenuOpen ? (
                         // "X" icon

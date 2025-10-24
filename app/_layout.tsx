@@ -23,14 +23,14 @@ const AppContent = () => {
             <Header openMenu={() => openMenu()} closeMenu={() => closeMenu()} isMenuOpen={isOpen}></Header>
             {renderSlideMenu({
                 children: (
-                    <Stack>
+                    <Stack screenOptions={{ headerShown: false }}>
                         {isAuthenticated ? (
                             <>
-                                <Stack.Screen name="home" options={{title: 'Home', headerShown: false}}/>
-                                <Stack.Screen name="about" options={{title: 'About', headerShown: false}}/>
+                                <Stack.Screen name="home" />
+                                <Stack.Screen name="about" />
                             </>
                         ) : (
-                            <Stack.Screen name="loginPage" options={{title: 'Login', headerShown: false}}/>
+                            <Stack.Screen name="loginPage" />
                         )}
                     </Stack>
                 )

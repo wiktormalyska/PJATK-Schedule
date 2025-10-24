@@ -3,11 +3,12 @@ import {responseStatus} from "@/types/responseStatus";
 import {useSchedule} from "@/hooks/use-schedule";
 import useStorage from "@/hooks/use-storage";
 import {useLoadingScreen} from "@/contexts/LoadingScreenContext";
+import {useRouter} from "expo-router";
 
 interface AuthContextType {
     isAuthenticated: boolean;
     login: (loginVar: string, passwordVar: string) => Promise<string | null>;
-    logout: () => void;
+    logout: () => Promise<void>;
 }
 
 const LOGIN_STORAGE_KEY = "login";
@@ -19,10 +20,11 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({children
     const [isAuthenticated, setIsAuthenticated] = React.useState(false);
 
     const {login: loginFunc} = useSchedule();
-    const {loadData, saveData} = useStorage()
+    const {loadData, saveData, removeData} = useStorage()
     const {show, hide} = useLoadingScreen();
 
     const triedAutoLogin = useRef(false);
+    const router = useRouter()
 
     const login = async (loginVar:string, passwordVar:string) => {
         let error = null;
@@ -40,6 +42,7 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({children
                 await saveData(LOGIN_STORAGE_KEY, loginVar);
                 await saveData(PASSWORD_STORAGE_KEY, passwordVar);
                 setIsAuthenticated(true)
+                router.replace('/home');
                 break
             case responseStatus.INVALID_CREDENTIALS:
                 error = 'Invalid login or password.';
@@ -78,8 +81,12 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({children
             });
     }, []);
 
-    const logout = () => {
+    const logout = async () => {
         setIsAuthenticated(false)
+        await removeData(LOGIN_STORAGE_KEY)
+        await removeData(PASSWORD_STORAGE_KEY)
+
+        router.replace('/loginPage');
         console.log("User logged out");
     };
 

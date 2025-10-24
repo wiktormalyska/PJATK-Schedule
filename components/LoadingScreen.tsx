@@ -29,7 +29,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ visible }) => {
         container: {
             backgroundColor: getTheme().style.backgroundSecondary,
             padding: 30,
-            borderRadius: 10,
+            borderRadius: getTheme().style.borderRadius,
             elevation: 5,
         },
     });

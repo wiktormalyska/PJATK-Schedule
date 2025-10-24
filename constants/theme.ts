@@ -10,6 +10,7 @@ export interface ColorScheme {
     icon: string;
     tabIconDefault: string;
     tabIconSelected: string;
+    borderRadius: number;
 }
 
 export const Colors = {
@@ -22,6 +23,7 @@ export const Colors = {
         icon: '#687076',
         tabIconDefault: '#687076',
         tabIconSelected: '#E30613',
+        borderRadius: 10
     },
     dark: {
         text: '#ECEDEE',
@@ -32,6 +34,7 @@ export const Colors = {
         icon: '#9BA1A6',
         tabIconDefault: '#9BA1A6',
         tabIconSelected: '#E30613',
+        borderRadius: 10
     },
 };
 
