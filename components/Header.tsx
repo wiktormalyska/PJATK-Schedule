@@ -2,6 +2,7 @@ import React from "react";
 import {View, Text, TouchableOpacity} from "react-native";
 import {useTheme} from "@/hooks/use-theme";
 import {useAuthContext} from "@/contexts/AuthContext";
+import {Logo} from "@/components/Logo";
 
 // import Logo from "@/assets/Logo.svg"; // Replace with your SVG import
 
@@ -76,9 +77,8 @@ export const Header = ({openMenu, closeMenu, isMenuOpen}: HeaderProps) => {
                     )}
                 </View>
             </TouchableOpacity>
-            {/* Logo */}
-            {/* <Logo width={32} height={32} /> */}
-            <View style={{flex: 1, alignItems: "center"}}>
+            <View style={{flex: 1, alignItems: "center", flexDirection: "row", justifyContent: "center", gap: 8}}>
+                <Logo width={"28"} height={"28"} />
                 <Text style={{color: getTheme().style.text, fontSize: 20, fontWeight: "bold"}}>Schedule</Text>
             </View>
             {/* Placeholder for spacing */}
