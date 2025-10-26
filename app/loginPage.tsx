@@ -1,8 +1,9 @@
 import {StyleSheet, View, Text, TouchableOpacity, TextInput} from "react-native";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useAuthContext} from "@/contexts/AuthContext";
 import {useLoadingScreen} from "@/contexts/LoadingScreenContext";
 import {useTheme} from "@/hooks/use-theme";
+import {usePageTitle} from "@/contexts/PageTitleContext";
 
 export default function LoginPage() {
     const [login, setLogin] = useState('');
@@ -12,6 +13,11 @@ export default function LoginPage() {
     const {login:authLogin} = useAuthContext()
     const {show, hide} = useLoadingScreen()
     const {getTheme} = useTheme()
+    const {setTitle} = usePageTitle()
+
+    useEffect(() => {
+        setTitle("Login")
+    })
 
     const handleLogin = async () => {
         setError(null);

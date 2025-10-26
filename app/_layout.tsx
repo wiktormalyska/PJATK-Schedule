@@ -8,6 +8,7 @@ import {useTheme} from "@/hooks/use-theme";
 import {useSlideMenu} from "@/components/SlidingMenu";
 import {LoadingScreenProvider} from "@/contexts/LoadingScreenContext";
 import {AuthContextProvider, useAuthContext} from "@/contexts/AuthContext";
+import {PageTitleProvider} from "@/contexts/PageTitleContext";
 
 const AppContent = () => {
     const {getTheme, isLightTheme} = useTheme();
@@ -23,14 +24,14 @@ const AppContent = () => {
             <Header openMenu={() => openMenu()} closeMenu={() => closeMenu()} isMenuOpen={isOpen}></Header>
             {renderSlideMenu({
                 children: (
-                    <Stack screenOptions={{ headerShown: false }}>
+                    <Stack screenOptions={{headerShown: false}}>
                         {isAuthenticated ? (
                             <>
-                                <Stack.Screen name="home" />
-                                <Stack.Screen name="about" />
+                                <Stack.Screen name="home"/>
+                                <Stack.Screen name="about"/>
                             </>
                         ) : (
-                            <Stack.Screen name="loginPage" />
+                            <Stack.Screen name="loginPage"/>
                         )}
                     </Stack>
                 )
@@ -42,9 +43,11 @@ const AppContent = () => {
 export default function RootLayout() {
     return (
         <LoadingScreenProvider>
-            <AuthContextProvider>
-                <AppContent/>
-            </AuthContextProvider>
+            <PageTitleProvider>
+                <AuthContextProvider>
+                    <AppContent/>
+                </AuthContextProvider>
+            </PageTitleProvider>
         </LoadingScreenProvider>
     );
 }
