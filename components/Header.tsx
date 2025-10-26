@@ -1,11 +1,9 @@
 import React from "react";
 import {View, Text, TouchableOpacity} from "react-native";
-import {useTheme} from "@/hooks/use-theme";
+import {useTheme} from "@/contexts/ThemeContext";
 import {useAuthContext} from "@/contexts/AuthContext";
 import {Logo} from "@/components/Logo";
 import {usePageTitle} from "@/contexts/PageTitleContext";
-
-// import Logo from "@/assets/Logo.svg"; // Replace with your SVG import
 
 interface HeaderProps {
     openMenu?: () => void;
@@ -14,20 +12,20 @@ interface HeaderProps {
 }
 
 export const Header = ({openMenu, closeMenu, isMenuOpen}: HeaderProps) => {
-    const {getTheme} = useTheme()
+    const {currentTheme} = useTheme()
     const {isAuthenticated} = useAuthContext()
     const {title} = usePageTitle()
 
     return (
         <View className="flex flex-row items-center justify-between p-4 pt-7"
               style={{
-                  backgroundColor: getTheme().style.backgroundSecondary,
+                  backgroundColor: currentTheme.style.backgroundSecondary,
                   zIndex: 999
               }}
         >
             <TouchableOpacity onPress={isMenuOpen ? closeMenu : openMenu}
                               style={
-                                  isAuthenticated? {} : {display: "none"}
+                                  isAuthenticated ? {} : {display: "none"}
                               }
             >
                 <View style={{width: 28, height: 28, justifyContent: "center", alignItems: "center"}}>
@@ -38,7 +36,7 @@ export const Header = ({openMenu, closeMenu, isMenuOpen}: HeaderProps) => {
                                 position: "absolute",
                                 width: 22,
                                 height: 3,
-                                backgroundColor: getTheme().style.text,
+                                backgroundColor: currentTheme.style.text,
                                 borderRadius: 2,
                                 transform: [{rotate: "45deg"}]
                             }}/>
@@ -46,7 +44,7 @@ export const Header = ({openMenu, closeMenu, isMenuOpen}: HeaderProps) => {
                                 position: "absolute",
                                 width: 22,
                                 height: 3,
-                                backgroundColor: getTheme().style.text,
+                                backgroundColor: currentTheme.style.text,
                                 borderRadius: 2,
                                 transform: [{rotate: "-45deg"}]
                             }}/>
@@ -56,21 +54,21 @@ export const Header = ({openMenu, closeMenu, isMenuOpen}: HeaderProps) => {
                         <>
                             <View style={{
                                 height: 3,
-                                backgroundColor: getTheme().style.text,
+                                backgroundColor: currentTheme.style.text,
                                 marginVertical: 2,
                                 borderRadius: 2,
                                 width: 22
                             }}/>
                             <View style={{
                                 height: 3,
-                                backgroundColor: getTheme().style.text,
+                                backgroundColor: currentTheme.style.text,
                                 marginVertical: 2,
                                 borderRadius: 2,
                                 width: 22
                             }}/>
                             <View style={{
                                 height: 3,
-                                backgroundColor: getTheme().style.text,
+                                backgroundColor: currentTheme.style.text,
                                 marginVertical: 2,
                                 borderRadius: 2,
                                 width: 22
@@ -80,10 +78,9 @@ export const Header = ({openMenu, closeMenu, isMenuOpen}: HeaderProps) => {
                 </View>
             </TouchableOpacity>
             <View style={{flex: 1, alignItems: "center", flexDirection: "row", justifyContent: "center", gap: 8}}>
-                <Logo width={"28"} height={"28"} />
-                <Text style={{color: getTheme().style.text, fontSize: 20, fontWeight: "bold"}}>{title}</Text>
+                <Logo width={"28"} height={"28"}/>
+                <Text style={{color: currentTheme.style.text, fontSize: 20, fontWeight: "bold"}}>{title}</Text>
             </View>
-            {/* Placeholder for spacing */}
             <View style={{width: 28}}/>
         </View>
     )

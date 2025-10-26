@@ -3,7 +3,7 @@ import PJATKLogoLight from '@/assets/svgs/PJATK_Light.svg';
 // @ts-ignore
 import PJATKLogoDark from '@/assets/svgs/PJATK_Dark.svg';
 import {View} from "react-native";
-import {useTheme} from "@/hooks/use-theme";
+import {useTheme} from "@/contexts/ThemeContext";
 
 
 export const Logo = ({width = "24", height = "24"}) => {

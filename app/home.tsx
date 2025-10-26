@@ -1,10 +1,10 @@
 import {View, StyleSheet, Text} from "react-native";
-import {useTheme} from "@/hooks/use-theme";
+import {useTheme} from "@/contexts/ThemeContext";
 import {usePageTitle} from "@/contexts/PageTitleContext";
 import {useEffect} from "react";
 
 export default function Home() {
-    const {getTheme} = useTheme();
+    const {currentTheme} = useTheme();
     const {setTitle} = usePageTitle();
 
     useEffect(() => {
@@ -14,7 +14,7 @@ export default function Home() {
     const styles = StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: getTheme().style.background
+            backgroundColor: currentTheme.style.background
         }
     })
 

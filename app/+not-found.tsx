@@ -3,7 +3,7 @@ import {StyleSheet, View, Text} from 'react-native';
 import {Link} from "expo-router";
 
 export default function NotFound() {
-  return (
+    return (
       <View style={styles.container}>
           <Text style={styles.text}>
               Not Found

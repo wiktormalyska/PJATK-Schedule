@@ -4,14 +4,14 @@ import 'react-native-reanimated';
 import '../global.css';
 import React from "react";
 import {Header} from "@/components/Header";
-import {useTheme} from "@/hooks/use-theme";
+import {useTheme, ThemeProvider} from "@/contexts/ThemeContext";
 import {useSlideMenu} from "@/components/SlidingMenu";
 import {LoadingScreenProvider} from "@/contexts/LoadingScreenContext";
 import {AuthContextProvider, useAuthContext} from "@/contexts/AuthContext";
 import {PageTitleProvider} from "@/contexts/PageTitleContext";
 
 const AppContent = () => {
-    const {getTheme, isLightTheme} = useTheme();
+    const {currentTheme, isLightTheme} = useTheme();
     const {openMenu, closeMenu, isOpen, render: renderSlideMenu} = useSlideMenu();
     const {isAuthenticated} = useAuthContext();
 
@@ -19,7 +19,7 @@ const AppContent = () => {
         <>
             <StatusBar
                 barStyle={isLightTheme ? "dark-content" : "light-content"}
-                backgroundColor={getTheme().style.background}
+                backgroundColor={currentTheme.style.background}
             />
             <Header openMenu={() => openMenu()} closeMenu={() => closeMenu()} isMenuOpen={isOpen}></Header>
             {renderSlideMenu({
@@ -42,12 +42,14 @@ const AppContent = () => {
 
 export default function RootLayout() {
     return (
-        <LoadingScreenProvider>
-            <PageTitleProvider>
-                <AuthContextProvider>
-                    <AppContent/>
-                </AuthContextProvider>
-            </PageTitleProvider>
-        </LoadingScreenProvider>
+        <ThemeProvider>
+            <LoadingScreenProvider>
+                <PageTitleProvider>
+                    <AuthContextProvider>
+                        <AppContent/>
+                    </AuthContextProvider>
+                </PageTitleProvider>
+            </LoadingScreenProvider>
+        </ThemeProvider>
     );
 }

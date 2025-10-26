@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { Colors } from '@/constants/theme';
-import {useTheme} from "@/hooks/use-theme";
+import {useTheme} from "@/contexts/ThemeContext";
 
 interface LoadingScreenProps {
     visible: boolean;
 }
 
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ visible }) => {
-    const {getTheme, isLightTheme} = useTheme();
+    const {currentTheme, isLightTheme} = useTheme();
 
     const overlayColor = isLightTheme ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)';
 
@@ -27,9 +27,9 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ visible }) => {
             zIndex: 9999,
         },
         container: {
-            backgroundColor: getTheme().style.backgroundSecondary,
+            backgroundColor: currentTheme.style.backgroundSecondary,
             padding: 30,
-            borderRadius: getTheme().style.borderRadius,
+            borderRadius: currentTheme.style.borderRadius,
             elevation: 5,
         },
     });

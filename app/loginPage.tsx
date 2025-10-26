@@ -2,7 +2,7 @@ import {StyleSheet, View, Text, TouchableOpacity, TextInput} from "react-native"
 import {useEffect, useState} from "react";
 import {useAuthContext} from "@/contexts/AuthContext";
 import {useLoadingScreen} from "@/contexts/LoadingScreenContext";
-import {useTheme} from "@/hooks/use-theme";
+import {useTheme} from "@/contexts/ThemeContext";
 import {usePageTitle} from "@/contexts/PageTitleContext";
 
 export default function LoginPage() {
@@ -12,7 +12,7 @@ export default function LoginPage() {
 
     const {login:authLogin} = useAuthContext()
     const {show, hide} = useLoadingScreen()
-    const {getTheme} = useTheme()
+    const {currentTheme} = useTheme()
     const {setTitle} = usePageTitle()
 
     useEffect(() => {
@@ -34,21 +34,21 @@ export default function LoginPage() {
     const styles = StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: getTheme().style.background,
+            backgroundColor: currentTheme.style.background,
             alignItems: 'center',
             justifyContent: 'center',
             paddingBottom: 100,
 
         },
         title: {
-            color: getTheme().style.text,
+            color: currentTheme.style.text,
             fontSize: 24,
             marginBottom: 20,
         },
         input: {
             width: '80%',
-            backgroundColor: getTheme().style.backgroundSecondary,
-            color: getTheme().style.text,
+            backgroundColor: currentTheme.style.backgroundSecondary,
+            color: currentTheme.style.text,
             paddingVertical: 12,
             paddingHorizontal: 16,
             borderRadius: 6,
@@ -58,7 +58,7 @@ export default function LoginPage() {
             borderColor: '#333',
         },
         button: {
-            backgroundColor: getTheme().style.tint,
+            backgroundColor: currentTheme.style.tint,
             paddingVertical: 12,
             paddingHorizontal: 32,
             borderRadius: 6,
@@ -86,7 +86,7 @@ export default function LoginPage() {
             <TextInput
                 style={styles.input}
                 placeholder="Login"
-                placeholderTextColor={getTheme().style.textSecondary}
+                placeholderTextColor={currentTheme.style.textSecondary}
                 value={login}
                 onChangeText={setLogin}
                 autoCapitalize="none"
@@ -94,7 +94,7 @@ export default function LoginPage() {
             <TextInput
                 style={styles.input}
                 placeholder="Password"
-                placeholderTextColor={getTheme().style.textSecondary}
+                placeholderTextColor={currentTheme.style.textSecondary}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry

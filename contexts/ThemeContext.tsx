@@ -1,6 +1,6 @@
+import React, {createContext, useEffect, useState, ReactNode} from "react";
 import {Colors, ColorScheme} from "@/constants/theme";
 import useStorage from "@/hooks/use-storage";
-import {useEffect,useState} from "react";
 
 interface Theme {
     name: string;
@@ -21,12 +21,20 @@ export const ThemeList: Record<ThemeNames, Theme> = {
         name: "dark",
         style: Colors.dark
     }
-}
+};
 
 const THEME_STORAGE_KEY = "selected_theme";
 
-export const useTheme = () => {
-    const {saveData, loadData} = useStorage()
+interface ThemeContextType {
+    currentTheme: Theme;
+    setTheme: (themeName: ThemeNames) => Promise<boolean>;
+    isLightTheme: boolean;
+}
+
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+export const ThemeProvider: React.FC<{children : ReactNode}> = ({children}) => {
+    const {saveData, loadData} = useStorage();
     const [currentTheme, setCurrentTheme] = useState<Theme>(ThemeList[ThemeNames.LIGHT]);
 
     const isLightTheme = currentTheme.name === ThemeNames.LIGHT;
@@ -34,22 +42,15 @@ export const useTheme = () => {
     useEffect(() => {
         const loadTheme = async () => {
             const savedThemeName = await loadData(THEME_STORAGE_KEY);
-            if (savedThemeName) {
-                const theme = Object.values(ThemeList).find(t => t.name === savedThemeName);
-                if (theme) {
-                    setCurrentTheme(theme);
-                }
+            if (savedThemeName && (savedThemeName === ThemeNames.LIGHT || savedThemeName === ThemeNames.DARK)) {
+                // @ts-ignore
+                setCurrentTheme(ThemeList[savedThemeName]);
             } else {
-                setCurrentTheme(ThemeList[ThemeNames.LIGHT]);
                 await saveData(THEME_STORAGE_KEY, ThemeNames.LIGHT);
             }
         };
         loadTheme().then();
-    }, [loadData])
-    
-    const getTheme = ():Theme => {
-        return currentTheme;
-    }
+    }, [loadData, saveData]);
 
     const setTheme = async (themeName: ThemeNames): Promise<boolean> => {
         const selectedTheme = ThemeList[themeName];
@@ -59,11 +60,25 @@ export const useTheme = () => {
             return true;
         }
         return false;
-    }
+    };
 
-    return {
-        getTheme,
+    const value: ThemeContextType = {
+        currentTheme,
         setTheme,
         isLightTheme
+    };
+
+    return (
+        <ThemeContext.Provider value={value}>
+            {children}
+        </ThemeContext.Provider>
+    );
+};
+
+export const useTheme = (): ThemeContextType => {
+    const context = React.useContext(ThemeContext);
+    if (context === undefined) {
+        throw new Error("useTheme must be used within a ThemeProvider");
     }
-}
+    return context;
+};

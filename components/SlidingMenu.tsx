@@ -1,10 +1,10 @@
 import {Animated, Dimensions, StyleSheet, TouchableOpacity, View} from "react-native";
 import React from "react";
-import {useTheme} from "@/hooks/use-theme";
+import {ThemeNames, useTheme} from "@/contexts/ThemeContext";
 import {useAuthContext} from "@/contexts/AuthContext";
-import {SidebarButton} from "@/components/SidebarButton"
+import {SidebarButton, SidebarButtonType} from "@/components/SidebarButton"
 import {useLoadingScreen} from "@/contexts/LoadingScreenContext";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import Feather from '@expo/vector-icons/Feather';
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const MENU_WIDTH = SCREEN_WIDTH * 0.7;
@@ -12,7 +12,7 @@ const MENU_WIDTH = SCREEN_WIDTH * 0.7;
 export const useSlideMenu = () => {
     const [isOpen, setIsOpen] = React.useState(false);
     const translateX = React.useRef(new Animated.Value(-MENU_WIDTH)).current;
-    const {isLightTheme, getTheme} = useTheme();
+    const {isLightTheme, currentTheme, setTheme} = useTheme();
     const {logout} = useAuthContext()
     const {show, hide} = useLoadingScreen()
 
@@ -47,13 +47,23 @@ export const useSlideMenu = () => {
         closeMenu()
     }
 
+    const handleThemeSwitch = async () => {
+        show()
+        if (isLightTheme) {
+            await setTheme(ThemeNames.DARK)
+        } else {
+            await setTheme(ThemeNames.LIGHT)
+        }
+        hide()
+    }
+
     const styles = StyleSheet.create({
         overlay: {
             ...StyleSheet.absoluteFillObject,
             backgroundColor: overlayColor,
         },
         menu: {
-            backgroundColor: getTheme().style.backgroundSecondary,
+            backgroundColor: currentTheme.style.backgroundSecondary,
         },
     });
 
@@ -75,12 +85,18 @@ export const useSlideMenu = () => {
                     >
                         <View className="justify-between w-full h-full p-2.5">
                             <View className="py-5 px-4 flex-1">
+                                <SidebarButton
+                                    title="Change Theme"
+                                    onClick={handleThemeSwitch}
+                                    type={SidebarButtonType.SECONDARY}
+                                    icon={<Feather name={isLightTheme? "sun": "moon"} size={24} color={isLightTheme? currentTheme.style.text : "white"}/>}
+                                />
                             </View>
                             <View className="py-5 px-4 flex-1 justify-end items-center">
                                 <SidebarButton
                                     title="Logout"
                                     onClick={handleLogout}
-                                    icon={<AntDesign name="logout" size={24} color="white"/>}
+                                    icon={<Feather name="log-out" size={24} color={isLightTheme? currentTheme.style.text : "white"}/>}
                                 />
                             </View>
                         </View>
