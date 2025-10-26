@@ -2,7 +2,7 @@ import {Animated, Dimensions, StyleSheet, TouchableOpacity, View} from "react-na
 import React from "react";
 import {ThemeNames, useTheme} from "@/contexts/ThemeContext";
 import {useAuthContext} from "@/contexts/AuthContext";
-import {SidebarButton, SidebarButtonType} from "@/components/SidebarButton"
+import {Button, SidebarButtonType} from "@/components/Button"
 import {useLoadingScreen} from "@/contexts/LoadingScreenContext";
 import Feather from '@expo/vector-icons/Feather';
 
@@ -85,7 +85,7 @@ export const useSlideMenu = () => {
                     >
                         <View className="justify-between w-full h-full p-2.5">
                             <View className="py-5 px-4 flex-1">
-                                <SidebarButton
+                                <Button
                                     title="Change Theme"
                                     onClick={handleThemeSwitch}
                                     type={SidebarButtonType.SECONDARY}
@@ -93,7 +93,7 @@ export const useSlideMenu = () => {
                                 />
                             </View>
                             <View className="py-5 px-4 flex-1 justify-end items-center">
-                                <SidebarButton
+                                <Button
                                     title="Logout"
                                     onClick={handleLogout}
                                     icon={<Feather name="log-out" size={24} color={isLightTheme? currentTheme.style.text : "white"}/>}

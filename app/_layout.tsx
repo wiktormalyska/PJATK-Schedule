@@ -9,11 +9,13 @@ import {useSlideMenu} from "@/components/SlidingMenu";
 import {LoadingScreenProvider} from "@/contexts/LoadingScreenContext";
 import {AuthContextProvider, useAuthContext} from "@/contexts/AuthContext";
 import {PageTitleProvider} from "@/contexts/PageTitleContext";
+import {useTos} from "@/hooks/use-tos";
 
 const AppContent = () => {
     const {currentTheme, isLightTheme} = useTheme();
     const {openMenu, closeMenu, isOpen, render: renderSlideMenu} = useSlideMenu();
     const {isAuthenticated} = useAuthContext();
+    const {isTosConfirmed} = useTos()
 
     return (
         <>
@@ -25,13 +27,17 @@ const AppContent = () => {
             {renderSlideMenu({
                 children: (
                     <Stack screenOptions={{headerShown: false}}>
-                        {isAuthenticated ? (
-                            <>
-                                <Stack.Screen name="home"/>
-                                <Stack.Screen name="about"/>
-                            </>
+                        {isTosConfirmed ? (
+                            isAuthenticated ? (
+                                <>
+                                    <Stack.Screen name="home"/>
+                                    <Stack.Screen name="about"/>
+                                </>
+                            ) : (
+                                <Stack.Screen name="loginPage"/>
+                            )
                         ) : (
-                            <Stack.Screen name="loginPage"/>
+                            <Stack.Screen name="welcomePage"/>
                         )}
                     </Stack>
                 )

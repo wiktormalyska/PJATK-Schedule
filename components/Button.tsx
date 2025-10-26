@@ -14,7 +14,7 @@ export enum SidebarButtonType {
     SECONDARY
 }
 
-export const SidebarButton = ({onClick, title, icon, type = SidebarButtonType.MAIN} : SidebarButtonProps) => {
+export const Button = ({onClick, title, icon, type = SidebarButtonType.MAIN} : SidebarButtonProps) => {
     const {currentTheme} = useTheme();
 
     const styles = StyleSheet.create({
@@ -25,7 +25,6 @@ export const SidebarButton = ({onClick, title, icon, type = SidebarButtonType.MA
             padding: 12,
             gap: 12,
             backgroundColor: currentTheme.style.backgroundSecondary,
-            width: "100%",
             borderRadius: currentTheme.style.borderRadius,
             borderWidth: 1,
             borderColor: currentTheme.style.tint,
@@ -37,7 +36,6 @@ export const SidebarButton = ({onClick, title, icon, type = SidebarButtonType.MA
             padding: 12,
             gap: 12,
             backgroundColor: currentTheme.style.backgroundSecondary,
-            width: "100%",
             borderRadius: currentTheme.style.borderRadius,
             borderWidth: 1,
             borderColor: currentTheme.style.text,
