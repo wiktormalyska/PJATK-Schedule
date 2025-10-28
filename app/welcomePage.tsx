@@ -8,15 +8,28 @@ import Authors from "@/components/Authors";
 import {Button, SidebarButtonType} from "@/components/Button";
 import Feather from "@expo/vector-icons/Feather";
 import {useLoadingScreen} from "@/contexts/LoadingScreenContext";
+import {useModal} from "@/contexts/ModalContext";
+import {useTos} from "@/hooks/use-tos";
+import {ToS} from "@/components/ToS";
 
 export default function WelcomePage() {
     const {currentTheme, isLightTheme, setTheme} = useTheme()
-    const {setTitle} = usePageTitle()
+    const {setTitle:setPageTitle} = usePageTitle()
     const {show, hide} = useLoadingScreen()
+    const {openModal, setContent, setTitle, setIsClosable} = useModal()
+    const {getIsTosConfirmed} = useTos()
 
     useEffect(() => {
-        setTitle("PJATK Schedule")
+        setPageTitle("PJATK Schedule")
     })
+
+    useEffect(() => {
+        if (!getIsTosConfirmed) {
+            setTitle("Terms of Service");
+            setContent(<ToS/>);
+            setIsClosable(false);
+        }
+    }, [getIsTosConfirmed, setTitle, setContent]);
 
     const handleThemeSwitch = async () => {
         show()
@@ -26,6 +39,11 @@ export default function WelcomePage() {
             await setTheme(ThemeNames.LIGHT)
         }
         hide()
+    }
+
+    const handleSetup = () => {
+        console.log("Setup clicked")
+        openModal()
     }
 
     const styles = StyleSheet.create({
@@ -78,9 +96,7 @@ export default function WelcomePage() {
             </View>
             <View style={styles.centerContainer}>
                 <Button
-                    onClick={() => {
-                        console.log("Hello!")
-                    }}
+                    onClick={handleSetup}
                     title={"Setup"}
                     icon={
                         <Feather name="arrow-right" size={24} color={currentTheme.style.text}/>

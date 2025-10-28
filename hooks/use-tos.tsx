@@ -5,22 +5,30 @@ const TOS_STORAGE_KEY = "tos_confirmed";
 
 export const useTos = () => {
     const [isTosConfirmed, setIsTosConfirmed] = useState(false)
-    const {loadData, saveData, removeData} = useStorage()
+    const {loadData, saveData} = useStorage()
 
     useEffect(() => {
         const fetchTosStatus = async () => {
             const storedStatus = await loadData(TOS_STORAGE_KEY);
-            if (storedStatus === 'true') {
-                setIsTosConfirmed(true);
-                await saveData(TOS_STORAGE_KEY, storedStatus);
-            }
-        }
+            console.log("TOS stored status:", storedStatus === 'true');
+            setIsTosConfirmed(storedStatus === 'true');
+        };
 
-        fetchTosStatus().then();
+        fetchTosStatus().then(() => {});
     }, [])
+
+    const getIsTosConfirmed = async () => {
+        return await loadData(TOS_STORAGE_KEY)
+    }
+
+    const setIsTosConfirmedWrapper = async (confirmed: boolean) => {
+        setIsTosConfirmed(confirmed);
+        await saveData(TOS_STORAGE_KEY, confirmed ? 'true' : 'false');
+    }
 
     return {
         isTosConfirmed,
-        setIsTosConfirmed,
+        getIsTosConfirmed,
+        setIsTosConfirmed: setIsTosConfirmedWrapper,
     }
 }

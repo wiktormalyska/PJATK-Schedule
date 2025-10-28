@@ -5,7 +5,7 @@ import React from "react";
 interface SidebarButtonProps {
     onClick: () => void;
     title: string;
-    icon: React.ReactNode;
+    icon?: React.ReactNode;
     type? : SidebarButtonType;
 }
 
@@ -62,7 +62,7 @@ export const Button = ({onClick, title, icon, type = SidebarButtonType.MAIN} : S
 
     return (
         <TouchableOpacity onPress={onClick} style={buttonStyle}>
-            {icon}
+            {icon? icon : null}
             <Text style={textStyle}>{title}</Text>
         </TouchableOpacity>
     );

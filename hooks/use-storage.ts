@@ -13,6 +13,7 @@ const useStorage = () => {
     const loadData = async (key: string) => {
         try {
             const value = await AsyncStorage.getItem(key);
+            console.log('Data ' + key + ' loaded: ' + value);
             return value ? JSON.parse(value) : null;
         } catch (error) {
             console.error('Error loading data:', error);
