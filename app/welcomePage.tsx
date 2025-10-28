@@ -9,27 +9,20 @@ import {Button, SidebarButtonType} from "@/components/Button";
 import Feather from "@expo/vector-icons/Feather";
 import {useLoadingScreen} from "@/contexts/LoadingScreenContext";
 import {useModal} from "@/contexts/ModalContext";
-import {useTos} from "@/hooks/use-tos";
 import {ToS} from "@/components/ToS";
 
 export default function WelcomePage() {
     const {currentTheme, isLightTheme, setTheme} = useTheme()
-    const {setTitle:setPageTitle} = usePageTitle()
+    const {setTitle: setPageTitle} = usePageTitle()
     const {show, hide} = useLoadingScreen()
     const {openModal, setContent, setTitle, setIsClosable} = useModal()
-    const {getIsTosConfirmed} = useTos()
 
     useEffect(() => {
         setPageTitle("PJATK Schedule")
-    })
-
-    useEffect(() => {
-        if (!getIsTosConfirmed) {
-            setTitle("Terms of Service");
-            setContent(<ToS/>);
-            setIsClosable(false);
-        }
-    }, [getIsTosConfirmed, setTitle, setContent]);
+        setTitle("Terms of Service");
+        setContent(<ToS/>);
+        setIsClosable(false);
+    }, [])
 
     const handleThemeSwitch = async () => {
         show()
@@ -95,20 +88,24 @@ export default function WelcomePage() {
 
             </View>
             <View style={styles.centerContainer}>
-                <Button
-                    onClick={handleSetup}
-                    title={"Setup"}
-                    icon={
-                        <Feather name="arrow-right" size={24} color={currentTheme.style.text}/>
-                    }>
-                </Button>
-                <Button
-                    title="Change Theme"
-                    onClick={handleThemeSwitch}
-                    type={SidebarButtonType.SECONDARY}
-                    icon={<Feather name={isLightTheme ? "sun" : "moon"} size={24}
-                                   color={isLightTheme ? currentTheme.style.text : "white"}/>}
-                />
+                <View>
+                    <Button
+                        onClick={handleSetup}
+                        title={"Setup"}
+                        icon={
+                            <Feather name="arrow-right" size={24} color={currentTheme.style.text}/>
+                        }>
+                    </Button>
+                </View>
+                <View>
+                    <Button
+                        title="Change Theme"
+                        onClick={handleThemeSwitch}
+                        type={SidebarButtonType.SECONDARY}
+                        icon={<Feather name={isLightTheme ? "sun" : "moon"} size={24}
+                                       color={isLightTheme ? currentTheme.style.text : "white"}/>}
+                    />
+                </View>
             </View>
             <View style={styles.bottomContainer}>
                 <Text style={styles.text}>Authors:</Text>

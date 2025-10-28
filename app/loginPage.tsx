@@ -1,9 +1,10 @@
-import {StyleSheet, View, Text, TouchableOpacity, TextInput} from "react-native";
+import {StyleSheet, View, Text, TextInput} from "react-native";
 import {useEffect, useState} from "react";
 import {useAuthContext} from "@/contexts/AuthContext";
 import {useLoadingScreen} from "@/contexts/LoadingScreenContext";
 import {useTheme} from "@/contexts/ThemeContext";
 import {usePageTitle} from "@/contexts/PageTitleContext";
+import {Button} from "@/components/Button";
 
 export default function LoginPage() {
     const [login, setLogin] = useState('');
@@ -58,11 +59,8 @@ export default function LoginPage() {
             borderColor: '#333',
         },
         button: {
-            backgroundColor: currentTheme.style.tint,
-            paddingVertical: 12,
-            paddingHorizontal: 32,
-            borderRadius: 6,
-            elevation: 2,
+            flexDirection: 'row',
+            width: '80%',
         },
         buttonText: {
             color: '#fff',
@@ -101,9 +99,10 @@ export default function LoginPage() {
                 autoCapitalize="none"
             />
 
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Log in</Text>
-            </TouchableOpacity>
+            <View style={styles.button}>
+                <Button onClick={handleLogin} title={"Log In"} />
+            </View>
+
 
             {error ? <Text style={styles.errorText}>{error}</Text> : <Text style={styles.errorText}>{""}</Text>}
         </View>

@@ -11,8 +11,8 @@ interface AuthContextType {
     logout: () => Promise<void>;
 }
 
-const LOGIN_STORAGE_KEY = "login";
-const PASSWORD_STORAGE_KEY = "password";
+export const LOGIN_STORAGE_KEY = "login";
+export const PASSWORD_STORAGE_KEY = "password";
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

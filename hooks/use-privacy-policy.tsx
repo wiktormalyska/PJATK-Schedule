@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import useStorage from "@/hooks/use-storage";
 
-const PRIVACY_POLICY_STORAGE_KEY = "privacy_policy_confirmed";
+export const PRIVACY_POLICY_STORAGE_KEY = "privacy_policy_confirmed";
 
 export const usePrivacyPolicy = () => {
     const [isPrivacyPolicyConfirmed, setIsPrivacyPolicyConfirmed] = useState(false)

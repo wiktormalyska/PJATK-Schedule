@@ -28,6 +28,7 @@ export const Button = ({onClick, title, icon, type = SidebarButtonType.MAIN} : S
             borderRadius: currentTheme.style.borderRadius,
             borderWidth: 1,
             borderColor: currentTheme.style.tint,
+            width: "100%"
         },
         buttonSecondary: {
             flexDirection: "row",
@@ -39,6 +40,7 @@ export const Button = ({onClick, title, icon, type = SidebarButtonType.MAIN} : S
             borderRadius: currentTheme.style.borderRadius,
             borderWidth: 1,
             borderColor: currentTheme.style.text,
+            width: "100%"
         },
         textMain: {
             color: currentTheme.style.text,

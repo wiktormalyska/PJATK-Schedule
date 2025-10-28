@@ -18,7 +18,7 @@ export const PrivacyPolicy = () => {
         show()
         await setIsPrivacyPolicyConfirmed(true);
         closeModal();
-        router.replace('/loginPage')
+        router.replace('/home');
         hide()
     }
 

@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import useStorage from "@/hooks/use-storage";
 
-const TOS_STORAGE_KEY = "tos_confirmed";
+export const TOS_STORAGE_KEY = "tos_confirmed";
 
 export const useTos = () => {
     const [isTosConfirmed, setIsTosConfirmed] = useState(false)
