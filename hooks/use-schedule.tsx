@@ -1,8 +1,32 @@
 import {responseStatus} from "@/types/responseStatus";
+import useStorage from "@/hooks/use-storage";
+import {COOKIES_STORAGE_KEY} from "@/contexts/AuthContext";
 
 export const useSchedule = () => {
+    const {loadData} = useStorage();
+
+    const getCookies = async (): Promise<string> => {
+        const cookies = await loadData(COOKIES_STORAGE_KEY);
+        return cookies || '';
+    };
+
+    const makeAuthenticatedRequest = async (url: string, options: RequestInit = {}): Promise<Response> => {
+        const cookies = await getCookies();
+        const headers = {
+            ...options.headers,
+            ...(cookies ? {'Cookie': cookies} : {})
+        };
+
+        return fetch(url, {
+            ...options,
+            headers
+        });
+    };
+
     return {
-        login
+        login,
+        getCookies,
+        makeAuthenticatedRequest
     }
 }
 
@@ -21,6 +45,7 @@ const getLoginForm = async () => {
 interface loginResponse {
     status: string;
     body: string;
+    cookies?: string;
 }
 
 const login = async (username: string, password: string): Promise<loginResponse> => {
@@ -64,9 +89,14 @@ const login = async (username: string, password: string): Promise<loginResponse>
             }
         }
 
+        // Extract cookies from response headers
+        const setCookieHeader = response.headers.get('set-cookie');
+        const cookies = setCookieHeader || '';
+
         return {
             status: responseStatus.SUCCESS,
-            body: 'Logged in as ' + username
+            body: 'Logged in as ' + username,
+            cookies: cookies
         }
     } catch (error) {
         return {

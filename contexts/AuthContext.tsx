@@ -13,6 +13,7 @@ interface AuthContextType {
 
 export const LOGIN_STORAGE_KEY = "login";
 export const PASSWORD_STORAGE_KEY = "password";
+export const COOKIES_STORAGE_KEY = "auth_cookies";
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -41,6 +42,10 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({children
                 console.log('Login successful');
                 await saveData(LOGIN_STORAGE_KEY, loginVar);
                 await saveData(PASSWORD_STORAGE_KEY, passwordVar);
+                if (response.cookies) {
+                    await saveData(COOKIES_STORAGE_KEY, response.cookies);
+                    console.log('Cookies saved');
+                }
                 setIsAuthenticated(true)
                 router.replace('/home');
                 break
@@ -85,6 +90,7 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({children
         setIsAuthenticated(false)
         await removeData(LOGIN_STORAGE_KEY)
         await removeData(PASSWORD_STORAGE_KEY)
+        await removeData(COOKIES_STORAGE_KEY)
 
         router.replace('/loginPage');
         console.log("User logged out");
