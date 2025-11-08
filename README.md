@@ -25,6 +25,14 @@ In the output, you'll find options to open the app in a
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
+## Features
+
+### Authentication Cookie Management
+
+This app implements cookie management for ASP.NET authentication with the PJATK schedule website. Cookies are automatically saved after login and included in subsequent authenticated requests.
+
+For detailed information about how cookie management works, see [docs/COOKIE_MANAGEMENT.md](docs/COOKIE_MANAGEMENT.md).
+
 ## Get a fresh project
 
 When you're ready, run:
