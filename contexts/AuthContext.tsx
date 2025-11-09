@@ -1,9 +1,10 @@
 import React, {createContext, ReactNode, useContext, useEffect, useRef} from "react";
 import {responseStatus} from "@/types/responseStatus";
-import {useSchedule} from "@/hooks/use-schedule";
+import {useScheduleAuth} from "@/hooks/use-schedule-auth";
 import useStorage from "@/hooks/use-storage";
 import {useLoadingScreen} from "@/contexts/LoadingScreenContext";
 import {useRouter} from "expo-router";
+import {useScheduleData} from "@/contexts/ScheduleDataContext";
 
 interface AuthContextType {
     isAuthenticated: boolean;
@@ -19,9 +20,11 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [isAuthenticated, setIsAuthenticated] = React.useState(false);
 
-    const {login: loginFunc} = useSchedule();
+    const {login: loginFunc} = useScheduleAuth();
     const {loadData, saveData, removeData} = useStorage()
     const {show, hide} = useLoadingScreen();
+    const {replace} = useRouter()
+    const {refreshData} = useScheduleData()
 
     const triedAutoLogin = useRef(false);
     const router = useRouter()
@@ -56,7 +59,8 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({children
                 break
         }
         console.log("User logged in");
-
+        await refreshData()
+        replace('/home');
         return error;
     };
 

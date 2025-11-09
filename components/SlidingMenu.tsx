@@ -1,12 +1,12 @@
 import {Animated, Dimensions, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import React from "react";
 import {ThemeNames, useTheme} from "@/contexts/ThemeContext";
-import {LOGIN_STORAGE_KEY, useAuthContext} from "@/contexts/AuthContext";
+import {useAuthContext} from "@/contexts/AuthContext";
 import {Button, SidebarButtonType} from "@/components/Button"
 import {useLoadingScreen} from "@/contexts/LoadingScreenContext";
 import Feather from '@expo/vector-icons/Feather';
 import {useDev} from "@/hooks/use-dev";
-import useStorage from "@/hooks/use-storage";
+import {useScheduleData} from "@/contexts/ScheduleDataContext";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const MENU_WIDTH = SCREEN_WIDTH * 0.7;
@@ -18,7 +18,7 @@ export const useSlideMenu = () => {
     const {logout} = useAuthContext()
     const {show, hide} = useLoadingScreen()
     const {isDev, cleanupSetupData} = useDev()
-    const {loadData} = useStorage()
+    const {userFullName} = useScheduleData()
 
     const overlayColor = isLightTheme ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.3)';
 
@@ -81,69 +81,71 @@ export const useSlideMenu = () => {
         },
     });
 
-    const render = ({children}: SlideMenuProps) => (
-        <>
-            {children}
-            {isOpen && (
-                <>
-                    <TouchableOpacity
-                        style={styles.overlay}
-                        onPress={closeMenu}
-                        activeOpacity={1}
-                        className="z-10"
-                    />
-                    <Animated.View
-                        style={[styles.menu, {transform: [{translateX}]}]}
-                        className="absolute left-0 top-0 bottom-0 pt-[70px] z-[11]"
-                        {...{width: MENU_WIDTH}}
-                    >
-                        <View className="justify-between w-full h-full p-2.5">
-                            <View className="py-5 px-4 flex-1 gap-5">
-                                <Button
-                                    title="Change Theme"
-                                    onClick={handleThemeSwitch}
-                                    type={SidebarButtonType.SECONDARY}
-                                    icon={<Feather name={isLightTheme ? "sun" : "moon"} size={24}
-                                                   color={isLightTheme ? currentTheme.style.text : "white"}/>}
-                                />
-                                {isDev ? (
+    const render = ({children}: SlideMenuProps) => {
+        return (
+            <>
+                {children}
+                {isOpen && (
+                    <>
+                        <TouchableOpacity
+                            style={styles.overlay}
+                            onPress={closeMenu}
+                            activeOpacity={1}
+                            className="z-10"
+                        />
+                        <Animated.View
+                            style={[styles.menu, {transform: [{translateX}]}]}
+                            className="absolute left-0 top-0 bottom-0 pt-[70px] z-[11]"
+                            {...{width: MENU_WIDTH}}
+                        >
+                            <View className="justify-between w-full h-full p-2.5">
+                                <View className="py-5 px-4 flex-1 gap-5">
                                     <Button
-                                        title="[DEV] Clear Setup Data"
-                                        onClick={cleanupSetupData}
+                                        title="Change Theme"
+                                        onClick={handleThemeSwitch}
                                         type={SidebarButtonType.SECONDARY}
-                                        icon={
-                                        <Feather
-                                            name="code"
-                                            size={24}
-                                            color={isLightTheme ? currentTheme.style.text : "white"}
-                                        />}
+                                        icon={<Feather name={isLightTheme ? "sun" : "moon"} size={24}
+                                                       color={isLightTheme ? currentTheme.style.text : "white"}/>}
                                     />
-                                ) : null
-                                }
+                                    {isDev ? (
+                                        <Button
+                                            title="[DEV] Clear Setup Data"
+                                            onClick={cleanupSetupData}
+                                            type={SidebarButtonType.SECONDARY}
+                                            icon={
+                                                <Feather
+                                                    name="code"
+                                                    size={24}
+                                                    color={isLightTheme ? currentTheme.style.text : "white"}
+                                                />}
+                                        />
+                                    ) : null
+                                    }
 
-                            </View>
-                            <View className="py-5 px-4 flex-1 justify-end items-center w-[100%]} gap-5">
-                                <View style={styles.user}>
-                                    <Feather
-                                        name="user"
-                                        size={24}
-                                        color={isLightTheme ? currentTheme.style.text : "white"} />
-                                    <Text style={styles.userText}>{loadData(LOGIN_STORAGE_KEY)}</Text>
                                 </View>
+                                <View className="py-5 px-4 flex-1 justify-end items-center w-[100%]} gap-5">
+                                    <View style={styles.user}>
+                                        <Feather
+                                            name="user"
+                                            size={24}
+                                            color={isLightTheme ? currentTheme.style.text : "white"}/>
+                                        <Text style={styles.userText}>{userFullName.substring(0, 100)}</Text>
+                                    </View>
 
-                                <Button
-                                    title="Logout"
-                                    onClick={handleLogout}
-                                    icon={<Feather name="log-out" size={24}
-                                                   color={isLightTheme ? currentTheme.style.text : "white"}/>}
-                                />
+                                    <Button
+                                        title="Logout"
+                                        onClick={handleLogout}
+                                        icon={<Feather name="log-out" size={24}
+                                                       color={isLightTheme ? currentTheme.style.text : "white"}/>}
+                                    />
+                                </View>
                             </View>
-                        </View>
-                    </Animated.View>
-                </>
-            )}
-        </>
-    );
+                        </Animated.View>
+                    </>
+                )}
+            </>
+        );
+    }
 
     return {
         isOpen,

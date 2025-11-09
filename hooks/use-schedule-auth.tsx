@@ -1,8 +1,14 @@
 import {responseStatus} from "@/types/responseStatus";
+import CookieManager from '@react-native-cookies/cookies';
+import useStorage from "@/hooks/use-storage";
 
-export const useSchedule = () => {
+const COOKIES_STORAGE_KEY = 'aspnet_auth_cookies';
+
+
+export const useScheduleAuth = () => {
     return {
-        login
+        login,
+        authenticatedRequest
     }
 }
 
@@ -24,6 +30,7 @@ interface loginResponse {
 }
 
 const login = async (username: string, password: string): Promise<loginResponse> => {
+    const {saveData} = useStorage()
 
     try {
         const formData = await getLoginForm();
@@ -49,6 +56,14 @@ const login = async (username: string, password: string): Promise<loginResponse>
             body: body.toString()
         });
 
+        const sessionCookies = await CookieManager.get('https://planzajec.pjwstk.edu.pl');
+
+        const aspxCookieString = ".ASPXAUTH="+sessionCookies['.ASPXAUTH']?.value;
+        const aspnetCookieString = "ASP.NET_SessionId"+sessionCookies['ASP.NET_SessionId']?.value;
+
+        const cookiesString = aspnetCookieString + "; " + aspxCookieString;
+
+        await saveData(COOKIES_STORAGE_KEY, cookiesString);
         if (!response.ok) {
             return {
                 status: responseStatus.NETWORK_ERROR,
@@ -75,3 +90,25 @@ const login = async (username: string, password: string): Promise<loginResponse>
         }
     }
 }
+
+const authenticatedRequest = async (url: string, options: RequestInit = {}) => {
+    const {loadData} = useStorage()
+
+    const cookieString = await loadData(COOKIES_STORAGE_KEY) || '';
+
+    if (!cookieString) {
+        console.error('No cookies found');
+        return new Response('No cookies found', { status: 401 });
+    }
+
+    const headers = {
+        ...options.headers,
+        'Cookie': cookieString,
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+    };
+
+    return fetch(url, {
+        ...options,
+        headers
+    });
+};
