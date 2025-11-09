@@ -1,8 +1,10 @@
 import React, {createContext, ReactNode, useState} from "react";
 import {useScheduleStudentName} from "@/hooks/schedule-elements/use-schedule-student-name";
+import {useScheduleWeek} from "@/hooks/schedule-elements/use-schedule-week";
 
 interface ScheduleDataContextType {
     userFullName: string;
+    currentWeek: string;
     isLoading: boolean;
     error: string | null;
     refreshData: () => Promise<void>;
@@ -12,10 +14,12 @@ export const ScheduleDataContext = createContext<ScheduleDataContextType | undef
 
 export const ScheduleDataProvider: React.FC<{children: ReactNode}> = ({children}) => {
     const [userFullName, setUserFullName] = useState("");
+    const [currentWeek, setCurrentWeek] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const {getStudentName} = useScheduleStudentName()
+    const {getScheduleWeek} = useScheduleWeek()
 
     const fetchScheduleData = async () => {
         setIsLoading(true);
@@ -27,6 +31,13 @@ export const ScheduleDataProvider: React.FC<{children: ReactNode}> = ({children}
                 setUserFullName(studentName);
             } else {
                 setError('Failed to fetch student name');
+            }
+
+            const week = await getScheduleWeek();
+            if (week) {
+                setCurrentWeek(week);
+            } else {
+                setError('Failed to fetch schedule week');
             }
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error');
@@ -43,6 +54,7 @@ export const ScheduleDataProvider: React.FC<{children: ReactNode}> = ({children}
     return (
         <ScheduleDataContext.Provider value={{
             userFullName,
+            currentWeek,
             isLoading,
             error,
             refreshData,

@@ -122,6 +122,21 @@ export const useSlideMenu = () => {
                                     ) : null
                                     }
 
+                                    {isDev ? (
+                                        <Button
+                                            title="[DEV] Reload schedule data"
+                                            onClick={cleanupSetupData}
+                                            type={SidebarButtonType.SECONDARY}
+                                            icon={
+                                                <Feather
+                                                    name="code"
+                                                    size={24}
+                                                    color={isLightTheme ? currentTheme.style.text : "white"}
+                                                />}
+                                        />
+                                    ) : null
+                                    }
+
                                 </View>
                                 <View className="py-5 px-4 flex-1 justify-end items-center w-[100%]} gap-5">
                                     <View style={styles.user}>
