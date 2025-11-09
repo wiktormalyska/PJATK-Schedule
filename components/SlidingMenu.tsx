@@ -19,6 +19,7 @@ export const useSlideMenu = () => {
     const {show, hide} = useLoadingScreen()
     const {isDev, cleanupSetupData} = useDev()
     const {userFullName} = useScheduleData()
+    const {refreshData} = useScheduleData()
 
     const overlayColor = isLightTheme ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.3)';
 
@@ -125,7 +126,7 @@ export const useSlideMenu = () => {
                                     {isDev ? (
                                         <Button
                                             title="[DEV] Reload schedule data"
-                                            onClick={cleanupSetupData}
+                                            onClick={refreshData}
                                             type={SidebarButtonType.SECONDARY}
                                             icon={
                                                 <Feather
